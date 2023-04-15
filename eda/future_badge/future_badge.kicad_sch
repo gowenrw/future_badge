@@ -1,0 +1,21 @@
+(kicad_sch (version 20211123) (generator eeschema)
+
+  (uuid 32ef29cc-513a-45d1-907a-a1f734b9fbc8)
+
+  (paper "USLetter")
+
+  (title_block
+    (title "Future_Badge")
+    (date "2023-04-15")
+    (rev "1")
+    (company "Crafted by @alt_bier a.k.a. Richard Gowen")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
