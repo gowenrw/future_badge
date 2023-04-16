@@ -9,3 +9,4 @@ This is the file structure of this repository
 * [/](/README.md) - Home
 * [/art/](/art/) - Artwork and other graphics created by this project
   * [/art/inspiration/](/art/inspiration/) - YOU ARE HERE
+  * [/art/fonts/](/art/fonts/) - Fonts used in art and graphics
