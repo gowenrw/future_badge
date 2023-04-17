@@ -14,17 +14,15 @@ This is the file structure of this repository
 
 * [/](/README.md) - YOU ARE HERE
 * [/art/](./art/) - Artwork and other graphics created by this project
-  * /art/inspiration/ - Art and graphics pulled from other sources used as inspiration for this project
+  * [/art/inspiration/](./art/inspiration/) - Art and graphics pulled from other sources used as inspiration for this project
+  * [/art/fonts/](./art/fonts/) - Fonts used in art and graphics
 * [/code/](./code/) - All project related Code / Firmware
-  * /code/corsage/ - Code for the Raspberry Pi Pico on the corsage PCB
-  * /code/firmware/ - CircuitPython firmware used by this project
 * [/docs/](./docs/) - Documentation created by this project including web pages
 * [/eda/](./eda/) - Electronic Design Automation files (i.e. KiCad)
-  * /eda/hom3c0ming_boutonniere/ - KiCad project folder for the boutonniere PCB
-  * /eda/hom3c0ming_corsage/ - KiCad project folder for the corsage PCB
+  * [/eda/future_badge/](./eda/future_badge/) - KiCad 6.x project folder for the future_badge PCB
 * [/reference_parts/](./reference_parts/) - Documentation pulled from other sources related to components
-* [./README.md](/README.md) - This File
-* [./LICENSE](/LICENSE) - Currently set to MIT
+* [/README.md](/README.md) - This File
+* [/LICENSE](/LICENSE) - Currently set to MIT
 
 Note: the reference_parts directory is a link to a submodule repository.
 To add it use the following cmd after cloning this:
