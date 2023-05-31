@@ -7,9 +7,21 @@
 // LED PIN VALUES
 #define LED01Pin 12  // 12 corresponds to GPIO12
 #define LED02Pin 13  // 13 corresponds to GPIO13
+#define LED03Pin 14
+#define LED04Pin 27
+#define LED05Pin 26
+#define LED06Pin 25
+#define LED07Pin 33
+#define LED08Pin 32
+#define LEDB1Pin 23
+#define LEDB2Pin 22
+#define LEDB3Pin 21
+#define LEDB4Pin 5
+#define LEDW1Pin 17
+#define LEDW2Pin 16
 
 // Touch PIN VALUE
-#define TouchPin 32  // 32 corresponds to GPIO32 - Touch9
+#define TouchPin 4  // 4 corresponds to GPIO4 - Touch0
 
 // PWM Properties
 const int freq = 1000;
@@ -34,6 +46,20 @@ void setup(){
   // attach the channel to the GPIO to be controlled
   ledcAttachPin(LED01Pin, PWMChannel0);
   ledcAttachPin(LED02Pin, PWMChannel1);
+  ledcAttachPin(LED03Pin, PWMChannel0);
+  ledcAttachPin(LED04Pin, PWMChannel1);
+  ledcAttachPin(LED05Pin, PWMChannel0);
+  ledcAttachPin(LED06Pin, PWMChannel1);
+  ledcAttachPin(LED07Pin, PWMChannel0);
+  ledcAttachPin(LED08Pin, PWMChannel1);
+
+  //Normal LED output
+  pinMode(LEDB1Pin, OUTPUT);
+  pinMode(LEDB2Pin, OUTPUT);
+  pinMode(LEDB3Pin, OUTPUT);
+  pinMode(LEDB4Pin, OUTPUT);
+  pinMode(LEDW1Pin, OUTPUT);
+  pinMode(LEDW2Pin, OUTPUT);
 
   // Initializes the NeoPixels
   NEO01.begin();
@@ -51,6 +77,12 @@ void setup(){
 void loop(){
   // Set Delay Time [in ms]
   int DelayTime = 10;
+  digitalWrite(LEDB1Pin, HIGH);
+  digitalWrite(LEDB2Pin, HIGH);
+  digitalWrite(LEDB3Pin, HIGH);
+  digitalWrite(LEDB4Pin, HIGH);
+  digitalWrite(LEDW1Pin, HIGH);
+  digitalWrite(LEDW2Pin, HIGH);
 
   // Iterate 0 to 255
   for(int i=0; i<256; i++){
