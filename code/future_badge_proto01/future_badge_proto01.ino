@@ -87,6 +87,9 @@ void setup(){
   Serial.begin(115200);
 }
 
+// Function to go here soon - NeoColorWheel
+
+
 // LOOP - MAIN 
 void loop(){
   // Set Delay Time [in ms]
@@ -105,57 +108,90 @@ void loop(){
     int pos = i;
     if (pos < 85) {
       // Start off and slowly get brighter to full on
-      ledcWrite(PWMChannel0, int(pos*3));
+      ledcWrite(LED31Apwm, int(pos*3));
+      ledcWrite(LED32Bpwm, int(pos*3));
+      ledcWrite(LED33Apwm, int(pos*3));
+      ledcWrite(LED34Bpwm, int(pos*3));
       // Start on and slowly get dimmer to full off
-      ledcWrite(PWMChannel1, int(255 - (pos*3)));
+      ledcWrite(LED31Bpwm, int(255 - (pos*3)));
+      ledcWrite(LED32Apwm, int(255 - (pos*3)));
+      ledcWrite(LED33Bpwm, int(255 - (pos*3)));
+      ledcWrite(LED34Apwm, int(255 - (pos*3)));
       //
       // NeoPixel Color Cycle
       //
+      // NEO01 RED-YELLOW
+      // Red 255 Green 0-255 Blue 0
+      NEO01.setPixelColor(0, 255, int(pos*3), 0);
+      // Red 255 Green 255-0 Blue 0
+      NEO01.setPixelColor(1, 255, int(255 - (pos*3)), 0);
+      //
       // Red 255-0 Green 0-255
-      NEO01.setPixelColor(0, int(255 - (pos*3)), int(pos*3), 0);
       NEO02.setPixelColor(1, int(255 - (pos*3)), int(pos*3), 0);
-      // Green 255-0 Blue 0-255
-      NEO01.setPixelColor(1, 0, int(255 - (pos*3)), int(pos*3));
       // Blue 255-0 Red 0-255
       NEO02.setPixelColor(0, int(pos*3), 0, int(255 - pos*3));
     } else if (pos < 170) {
       pos = pos - 85;
       // Start off and slowly get brighter to full on
-      ledcWrite(PWMChannel1, int(pos*3));
+      ledcWrite(LED31Bpwm, int(pos*3));
+      ledcWrite(LED32Apwm, int(pos*3));
+      ledcWrite(LED33Bpwm, int(pos*3));
+      ledcWrite(LED34Apwm, int(pos*3));
       // Start on and slowly get dimmer to full off
-      ledcWrite(PWMChannel0, int(255 - (pos*3)));
+      ledcWrite(LED31Apwm, int(255 - (pos*3)));
+      ledcWrite(LED32Bpwm, int(255 - (pos*3)));
+      ledcWrite(LED33Apwm, int(255 - (pos*3)));
+      ledcWrite(LED34Bpwm, int(255 - (pos*3)));
       //
       // NeoPixel Color Cycle
+      //
+      // NEO01 RED-YELLOW
+      // Red 255 Green 0-255 Blue 0
+      NEO01.setPixelColor(1, 255, int(pos*3), 0);
+      // Red 255 Green 255-0 Blue 0
+      NEO01.setPixelColor(0, 255, int(255 - (pos*3)), 0);
       //
       // Red 255-0 Green 0-255
       NEO02.setPixelColor(0, int(255 - (pos*3)), int(pos*3), 0);
       // Green 255-0 Blue 0-255
-      NEO01.setPixelColor(0, 0, int(255 - (pos*3)), int(pos*3));
       NEO02.setPixelColor(1, 0, int(255 - (pos*3)), int(pos*3));
-      // Blue 255-0 Red 0-255
-      NEO01.setPixelColor(1, int(pos*3), 0, int(255 - pos*3));
     } else {
       pos = pos -170;
       if (pos <43) {
         // Start off and slowly get brighter to full on
-        ledcWrite(PWMChannel0, int(pos*6));
+        ledcWrite(LED31Apwm, int(pos*3));
+        ledcWrite(LED32Bpwm, int(pos*3));
+        ledcWrite(LED33Apwm, int(pos*3));
+        ledcWrite(LED34Bpwm, int(pos*3));
         // Start on and slowly get dimmer to full off
-        ledcWrite(PWMChannel1, int(255 - (pos*6)));        
+        ledcWrite(LED31Bpwm, int(255 - (pos*3)));
+        ledcWrite(LED32Apwm, int(255 - (pos*3)));
+        ledcWrite(LED33Bpwm, int(255 - (pos*3)));
+        ledcWrite(LED34Apwm, int(255 - (pos*3)));        
       } else {
         // Start off and slowly get brighter to full on
-        ledcWrite(PWMChannel1, int((pos-43)*6));
+        ledcWrite(LED31Bpwm, int(pos*3));
+        ledcWrite(LED32Apwm, int(pos*3));
+        ledcWrite(LED33Bpwm, int(pos*3));
+        ledcWrite(LED34Apwm, int(pos*3));
         // Start on and slowly get dimmer to full off
-        ledcWrite(PWMChannel0, int(255 - ((pos-43)*6)));
+        ledcWrite(LED31Apwm, int(255 - (pos*3)));
+        ledcWrite(LED32Bpwm, int(255 - (pos*3)));
+        ledcWrite(LED33Apwm, int(255 - (pos*3)));
+        ledcWrite(LED34Bpwm, int(255 - (pos*3)));
       }
       //
       // NeoPixel Color Cycle
       //
-      // Red 255-0 Green 0-255
-      NEO01.setPixelColor(1, int(255 - (pos*3)), int(pos*3), 0);
+      // NEO01 RED-YELLOW
+      // Red 255 Green 0-255 Blue 0
+      NEO01.setPixelColor(0, 255, int(pos*3), 0);
+      // Red 255 Green 255-0 Blue 0
+      NEO01.setPixelColor(1, 255, int(255 - (pos*3)), 0);
+      //
       // Green 255-0 Blue 0-255
       NEO02.setPixelColor(0, 0, int(255 - (pos*3)), int(pos*3));
       // Blue 255-0 Red 0-255
-      NEO01.setPixelColor(0, int(pos*3), 0, int(255 - pos*3));
       NEO02.setPixelColor(1, int(pos*3), 0, int(255 - pos*3));
     }    
     NEO01.show();
