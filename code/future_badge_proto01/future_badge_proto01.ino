@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+#include <WiFi.h>
 
 // NeoPixel PIN VALUES
 #define NEO01Pin 18   // 18 corresponds to GPIO18
@@ -48,6 +49,9 @@ int TouchValue = 31;
 
 // SETUP - RUN ONCE
 void setup(){
+  // Turn Off WiFi
+  WiFi.mode(WIFI_OFF);
+
   // configure LED PWM functionalitites per channel
   ledcSetup(LED31Apwm, freq, resolution);
   ledcSetup(LED31Bpwm, freq, resolution);
@@ -272,11 +276,18 @@ void loop(){
     Serial.print(i);
     Serial.print(" Position=");
     Serial.print(pos);
+    //
     // TOUCH
+    //
+    //Read Touch Value
     TouchValue = touchRead(TouchPin);
-    // Print current Touch value to serial console for troubleshooting
+    // Do Stuff If We Detect a Touch
     if (TouchValue < TouchThreshold) {
+      // Print current Touch value/threshold to serial console for troubleshooting
       Serial.print(" TOUCHED=");
+      Serial.print(TouchValue);
+      Serial.print("/");
+      Serial.print(TouchThreshold);
       //
       // LED BOOP EFFECT - OVERRIDES PRIOR LED SETTINGS BEFORE DELAY
       //
@@ -305,10 +316,14 @@ void loop(){
       NEO02.setPixelColor(0, 255, 255, 255);
       NEO02.setPixelColor(1, 255, 255, 255);
       NEO02.show();
-    } else { 
+    // Do Stuff If We DONT Detect a Touch
+    } else {
+      // Print current Touch value/threshold to serial console for troubleshooting
       Serial.print(" Touch=");
+      Serial.print(TouchValue);
+      Serial.print("/");
+      Serial.print(TouchThreshold);
     }
-    Serial.print(TouchValue);
     // Print Carriage Return
     Serial.println();
     // Pause the loop to display LEDS
