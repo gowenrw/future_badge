@@ -4,7 +4,8 @@
 #define NEO01Pin 18   // 18 corresponds to GPIO18
 #define NEO02Pin 19   // 18 corresponds to GPIO19
 
-// Two color LED PIN VALUES
+// Two color RY LED PIN VALUES
+// The A pin is Yellow and the B pin is Red
 #define LED31A 12  // 12 corresponds to GPIO12
 #define LED31B 13  // 13 corresponds to GPIO13
 #define LED32A 27
@@ -14,7 +15,7 @@
 #define LED34A 32
 #define LED34B 33
 
-// One color LED PIN VALUES
+// One color B/W LED PIN VALUES
 #define LEDB01 23
 #define LEDB02 22
 #define LEDB03 21
@@ -42,8 +43,8 @@ Adafruit_NeoPixel NEO01 = Adafruit_NeoPixel(2, NEO01Pin, NEO_RGB + NEO_KHZ800);
 Adafruit_NeoPixel NEO02 = Adafruit_NeoPixel(2, NEO02Pin, NEO_RGB + NEO_KHZ800);
 
 // Touch Properties
-const int TouchThreshold = 20;
-int TouchValue = 21;
+int TouchThreshold = 30;
+int TouchValue = 31;
 
 // SETUP - RUN ONCE
 void setup(){
@@ -87,26 +88,41 @@ void setup(){
   Serial.begin(115200);
 }
 
-// Function to go here soon - NeoColorWheel
-
-
 // LOOP - MAIN 
 void loop(){
   // Set Delay Time [in ms]
-  int DelayTime = 10;
-  digitalWrite(LEDB01, HIGH);
-  digitalWrite(LEDB02, HIGH);
-  digitalWrite(LEDB03, HIGH);
-  digitalWrite(LEDB04, HIGH);
-  digitalWrite(LEDW05, HIGH);
-  digitalWrite(LEDW06, HIGH);
+  int DelayTime = 20;
+
+  // Dynamically adjust touch threshold UP to account for
+  // Assembly conditions and battery vs usb
+  TouchValue = touchRead(TouchPin);
+  if ( (TouchValue / TouchThreshold) > 2 ) { TouchThreshold = int(TouchThreshold * 1.8); }
 
   // Iterate 0 to 255
   for(int i=0; i<256; i++){
 
     // Set position value to iteration
     int pos = i;
+    //
+    // First of three position groups 0-84
     if (pos < 85) {
+      //
+      // BLUE LEDS
+      if (pos % 2) {
+        digitalWrite(LEDB01, HIGH);
+        digitalWrite(LEDB03, LOW);
+      } else {
+        digitalWrite(LEDB01, LOW);
+        digitalWrite(LEDB03, HIGH);
+      }
+      digitalWrite(LEDB02, HIGH);
+      digitalWrite(LEDB04, HIGH);
+      // WHITE LEDS
+      digitalWrite(LEDW05, LOW);
+      digitalWrite(LEDW06, LOW);
+      //
+      // RY PWM LEDS
+      //
       // Start off and slowly get brighter to full on
       ledcWrite(LED31Apwm, int(pos*3));
       ledcWrite(LED32Bpwm, int(pos*3));
@@ -118,20 +134,40 @@ void loop(){
       ledcWrite(LED33Bpwm, int(255 - (pos*3)));
       ledcWrite(LED34Apwm, int(255 - (pos*3)));
       //
-      // NeoPixel Color Cycle
+      // Flame NeoPixel Red=ON Green=Cycle Blue=OFF (R+G=Y)
       //
-      // NEO01 RED-YELLOW
-      // Red 255 Green 0-255 Blue 0
-      NEO01.setPixelColor(0, 255, int(pos*3), 0);
-      // Red 255 Green 255-0 Blue 0
-      NEO01.setPixelColor(1, 255, int(255 - (pos*3)), 0);
+      // Red 255 Green ++ Blue 0
+      NEO01.setPixelColor(0, 255, int(pos), 0);
+      // Red 255 Green -- Blue 0
+      NEO01.setPixelColor(1, 255, int(84 - (pos)), 0);
+      //
+      // Title NeoPixel Color Cycle
       //
       // Red 255-0 Green 0-255
-      NEO02.setPixelColor(1, int(255 - (pos*3)), int(pos*3), 0);
+      NEO02.setPixelColor(0, int(255 - (pos*3)), int(pos*3), 0);
       // Blue 255-0 Red 0-255
-      NEO02.setPixelColor(0, int(pos*3), 0, int(255 - pos*3));
+      NEO02.setPixelColor(1, int(pos*3), 0, int(255 - pos*3));
+    //
+    // Second of three position groups 0-84
     } else if (pos < 170) {
       pos = pos - 85;
+      //
+      // BLUE LEDS
+      if (pos % 2) {
+        digitalWrite(LEDB02, HIGH);
+        digitalWrite(LEDB04, LOW);
+      } else {
+        digitalWrite(LEDB02, LOW);
+        digitalWrite(LEDB04, HIGH);
+      }
+      digitalWrite(LEDB01, HIGH);
+      digitalWrite(LEDB03, HIGH);
+      // WHITE LEDS
+      digitalWrite(LEDW05, LOW);
+      digitalWrite(LEDW06, LOW);
+      //
+      // RY PWM LEDS
+      //
       // Start off and slowly get brighter to full on
       ledcWrite(LED31Bpwm, int(pos*3));
       ledcWrite(LED32Apwm, int(pos*3));
@@ -143,56 +179,91 @@ void loop(){
       ledcWrite(LED33Apwm, int(255 - (pos*3)));
       ledcWrite(LED34Bpwm, int(255 - (pos*3)));
       //
-      // NeoPixel Color Cycle
+      // Flame NeoPixel Red=ON Green=Cycle Blue=OFF (R+G=Y)
       //
-      // NEO01 RED-YELLOW
-      // Red 255 Green 0-255 Blue 0
-      NEO01.setPixelColor(1, 255, int(pos*3), 0);
-      // Red 255 Green 255-0 Blue 0
-      NEO01.setPixelColor(0, 255, int(255 - (pos*3)), 0);
+      // Red 255 Green ++ Blue 0
+      NEO01.setPixelColor(1, 255, int(pos), 0);
+      // Red 255 Green -- Blue 0
+      NEO01.setPixelColor(0, 255, int(84 - (pos)), 0);
       //
-      // Red 255-0 Green 0-255
-      NEO02.setPixelColor(0, int(255 - (pos*3)), int(pos*3), 0);
-      // Green 255-0 Blue 0-255
-      NEO02.setPixelColor(1, 0, int(255 - (pos*3)), int(pos*3));
-    } else {
-      pos = pos -170;
-      if (pos <43) {
-        // Start off and slowly get brighter to full on
-        ledcWrite(LED31Apwm, int(pos*3));
-        ledcWrite(LED32Bpwm, int(pos*3));
-        ledcWrite(LED33Apwm, int(pos*3));
-        ledcWrite(LED34Bpwm, int(pos*3));
-        // Start on and slowly get dimmer to full off
-        ledcWrite(LED31Bpwm, int(255 - (pos*3)));
-        ledcWrite(LED32Apwm, int(255 - (pos*3)));
-        ledcWrite(LED33Bpwm, int(255 - (pos*3)));
-        ledcWrite(LED34Apwm, int(255 - (pos*3)));        
-      } else {
-        // Start off and slowly get brighter to full on
-        ledcWrite(LED31Bpwm, int(pos*3));
-        ledcWrite(LED32Apwm, int(pos*3));
-        ledcWrite(LED33Bpwm, int(pos*3));
-        ledcWrite(LED34Apwm, int(pos*3));
-        // Start on and slowly get dimmer to full off
-        ledcWrite(LED31Apwm, int(255 - (pos*3)));
-        ledcWrite(LED32Bpwm, int(255 - (pos*3)));
-        ledcWrite(LED33Apwm, int(255 - (pos*3)));
-        ledcWrite(LED34Bpwm, int(255 - (pos*3)));
-      }
-      //
-      // NeoPixel Color Cycle
-      //
-      // NEO01 RED-YELLOW
-      // Red 255 Green 0-255 Blue 0
-      NEO01.setPixelColor(0, 255, int(pos*3), 0);
-      // Red 255 Green 255-0 Blue 0
-      NEO01.setPixelColor(1, 255, int(255 - (pos*3)), 0);
+      // Title NeoPixel Color Cycle
       //
       // Green 255-0 Blue 0-255
       NEO02.setPixelColor(0, 0, int(255 - (pos*3)), int(pos*3));
+      // Red 255-0 Green 0-255
+      NEO02.setPixelColor(1, int(255 - (pos*3)), int(pos*3), 0);
+    //
+    // Third of three position groups 0-84
+    } else {
+      pos = pos -170;
+      //
+      // BLUE LEDS
+      digitalWrite(LEDB01, HIGH);
+      digitalWrite(LEDB02, HIGH);
+      digitalWrite(LEDB03, HIGH);
+      digitalWrite(LEDB04, HIGH);
+      //
+      // Split third group for things that need even number of transitions
+      if (pos <43) {
+        // WHITE LEDS
+        int wr05 = random(0,15);
+        if (wr05 >9) { digitalWrite(LEDW05, HIGH); } else { digitalWrite(LEDW05, LOW); }
+        int wr06 = random(0,15);
+        if (wr06 >9) { digitalWrite(LEDW06, HIGH); } else { digitalWrite(LEDW06, LOW); }
+        //
+        // RY PWM LEDS
+        //
+        // Start off and slowly get brighter to full on
+        ledcWrite(LED31Apwm, int(pos*6));
+        ledcWrite(LED32Bpwm, int(pos*6));
+        ledcWrite(LED33Apwm, int(pos*6));
+        ledcWrite(LED34Bpwm, int(pos*6));
+        // Start on and slowly get dimmer to full off
+        ledcWrite(LED31Bpwm, int(255 - (pos*6)));
+        ledcWrite(LED32Apwm, int(255 - (pos*6)));
+        ledcWrite(LED33Bpwm, int(255 - (pos*6)));
+        ledcWrite(LED34Apwm, int(255 - (pos*6)));
+        //
+        // Flame NeoPixel Red=ON Green=ON/OFF Blue=OFF (R+G=Y)
+        //
+        // Red 255 Green 25 Blue 0
+        NEO01.setPixelColor(0, 255, 25, 0);
+        // Red 255 Green 0 Blue 0
+        NEO01.setPixelColor(1, 255, 0, 0);
+      //
+      // Split third group for things that need even number of transitions
+      } else {
+        // WHITE LEDS
+        digitalWrite(LEDW05, LOW);
+        digitalWrite(LEDW06, LOW);
+        //
+        // RY PWM LEDS
+        //
+        // Start off and slowly get brighter to full on
+        ledcWrite(LED31Bpwm, int((pos-43)*6));
+        ledcWrite(LED32Apwm, int((pos-43)*6));
+        ledcWrite(LED33Bpwm, int((pos-43)*6));
+        ledcWrite(LED34Apwm, int((pos-43)*6));
+        // Start on and slowly get dimmer to full off
+        ledcWrite(LED31Apwm, int(255 - ((pos-43)*6)));
+        ledcWrite(LED32Bpwm, int(255 - ((pos-43)*6)));
+        ledcWrite(LED33Apwm, int(255 - ((pos-43)*6)));
+        ledcWrite(LED34Bpwm, int(255 - ((pos-43)*6)));
+        //
+        // Flame NeoPixel Red=ON Green=ON/OFF Blue=OFF (R+G=Y)
+        //
+        // Red 255 Green 25 Blue 0
+        NEO01.setPixelColor(1, 255, 25, 0);
+        // Red 255 Green 0 Blue 0
+        NEO01.setPixelColor(0, 255, 0, 0);
+      }
+      //
+      // Title NeoPixel Color Cycle
+      //
       // Blue 255-0 Red 0-255
-      NEO02.setPixelColor(1, int(pos*3), 0, int(255 - pos*3));
+      NEO02.setPixelColor(0, int(pos*3), 0, int(255 - pos*3));
+      // Green 255-0 Blue 0-255
+      NEO02.setPixelColor(1, 0, int(255 - (pos*3)), int(pos*3));
     }    
     NEO01.show();
     NEO02.show();
@@ -204,7 +275,39 @@ void loop(){
     // TOUCH
     TouchValue = touchRead(TouchPin);
     // Print current Touch value to serial console for troubleshooting
-    if (TouchValue < TouchThreshold) { Serial.print(" TOUCHED="); } else { Serial.print(" Touch="); }
+    if (TouchValue < TouchThreshold) {
+      Serial.print(" TOUCHED=");
+      //
+      // LED BOOP EFFECT - OVERRIDES PRIOR LED SETTINGS BEFORE DELAY
+      //
+      // BLUE LEDS
+      digitalWrite(LEDB01, HIGH);
+      digitalWrite(LEDB02, HIGH);
+      digitalWrite(LEDB03, HIGH);
+      digitalWrite(LEDB04, HIGH);
+      // WHITE LEDS
+      digitalWrite(LEDW05, HIGH);
+      digitalWrite(LEDW06, HIGH);
+      // RY PWM LEDS
+      ledcWrite(LED31Apwm, 255);
+      ledcWrite(LED32Apwm, 255);
+      ledcWrite(LED33Apwm, 255);
+      ledcWrite(LED34Apwm, 255);
+      ledcWrite(LED31Bpwm, 0);
+      ledcWrite(LED32Bpwm, 0);
+      ledcWrite(LED33Bpwm, 0);
+      ledcWrite(LED34Bpwm, 0);
+      // Flame NeoPixel
+      NEO01.setPixelColor(0, 255, 84, 0);
+      NEO01.setPixelColor(1, 255, 84, 0);
+      NEO01.show();
+      // Title NeoPixel
+      NEO02.setPixelColor(0, 255, 255, 255);
+      NEO02.setPixelColor(1, 255, 255, 255);
+      NEO02.show();
+    } else { 
+      Serial.print(" Touch=");
+    }
     Serial.print(TouchValue);
     // Print Carriage Return
     Serial.println();
