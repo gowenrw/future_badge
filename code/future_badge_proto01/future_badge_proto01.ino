@@ -44,8 +44,8 @@ Adafruit_NeoPixel NEO01 = Adafruit_NeoPixel(2, NEO01Pin, NEO_RGB + NEO_KHZ800);
 Adafruit_NeoPixel NEO02 = Adafruit_NeoPixel(2, NEO02Pin, NEO_RGB + NEO_KHZ800);
 
 // Touch Properties
-int TouchThreshold = 30;
-int TouchValue = 31;
+int TouchThreshold = 12;
+int TouchValue = 13;
 
 // SETUP - RUN ONCE
 void setup(){
