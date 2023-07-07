@@ -135,3 +135,18 @@ __pycache__/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# ###################################################################
+# Arduino generated files
+# ###################################################################
+code/_build/*
+!code/_build/README.md
+code/_data/*
+!code/_data/README.md
+code/_staging/*
+!code/_staging/README.md
+code/libraries/*
+!code/libraries/README.md
+code/arduino_cli_setup.log
+# Since binaries are ignored above we need to allow the few we want
+!code/*/build/*/*.bin
