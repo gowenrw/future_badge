@@ -26,8 +26,12 @@ These are the Arduino IDE and CLI versions we have tested the code with:
 
 * Arduino IDE v 2.1.1
   * [Windows MSI DL Link](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.1.1_Windows_64bit.msi)
+  * [Linux 64bit AppImage](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.1.1_Linux_64bit.AppImage)
+  * [Installation Instructions](https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-downloading-and-installing)
 * Arduino CLI v 0.32.3
   * [Windows MSI DL Link](https://github.com/arduino/arduino-cli/releases/download/0.32.3/arduino-cli_0.32.3_Windows_64bit.msi)
+  * [Linux 64bit Tarball Link](https://github.com/arduino/arduino-cli/releases/download/0.32.3/arduino-cli_0.32.3_Linux_64bit.tar.gz)
+  * [Installation Instructions](https://arduino.github.io/arduino-cli/0.32/installation/)
 
 # Arduino IDE setup and use
 
@@ -72,7 +76,7 @@ To use the Arduino CLI with this local config file simply add the ```--config-fi
 
 For example, the command below uses the local config file and will dump the current config to the screen
 ```
-  arduino-cli --config-file arduino-cli.yml config dump
+arduino-cli --config-file arduino-cli.yml config dump
 ```
 
 ## Setup for CLI
@@ -85,7 +89,7 @@ To simplify this setup we have created setup bash script named ```cli-setup.sh``
 
 To perform the CLI setup via the script execute it in the code directory
 ```
-  bash ./cli-setup.sh
+bash ./cli-setup.sh
 ```
 
 This script will save any std_out and std_err output to a file named ```arduino_cli_setup.log``` which you can review if you are having issues.
@@ -96,24 +100,24 @@ To perform the CLI setup manually without this script you can use the commands o
 
 Since the config is specifying a third party core for the ESP32 we need to pull an initial index from it.  This search command will pull that index.
 ```
-  arduino-cli --config-file arduino-cli.yml core search esp32
+arduino-cli --config-file arduino-cli.yml core search esp32
 ```
 
 Next we need to install the ESP32 board core files using this command.
 ```
-  arduino-cli --config-file arduino-cli.yml core install esp32:esp32
+arduino-cli --config-file arduino-cli.yml core install esp32:esp32
 ```
 
 If the ESP32 board core files were already installed the above will simply say already installed.
 
 To update the core file indexs to check for newer versions of previously installed cores, use the following command
 ```
-  arduino-cli --config-file arduino-cli.yml core update-index
+arduino-cli --config-file arduino-cli.yml core update-index
 ```
 
 To upgrade any previously installed cores use the following command
 ```
-  arduino-cli --config-file arduino-cli.yml core upgrade
+arduino-cli --config-file arduino-cli.yml core upgrade
 ```
 
 ### Installing the Neopixel Library
@@ -122,26 +126,26 @@ This code uses the AdaFruit NeoPixel library which needs to be installed
 
 If this is the first time we are installing a library we will need the indexes so this search command will get them
 ```
-  arduino-cli --config-file arduino-cli.yml lib search 'Adafruit NeoPixel'
+arduino-cli --config-file arduino-cli.yml lib search 'Adafruit NeoPixel'
 ```
 
 Next we need to install the Adafruit NeoPixel library files with this command
 ```
-  arduino-cli --config-file arduino-cli.yml lib install 'Adafruit NeoPixel'
+arduino-cli --config-file arduino-cli.yml lib install 'Adafruit NeoPixel'
 ```
 
 If the Adafruit NeoPixel library files were already installed the above will simply say already installed.
 
 To upgrade a previously installed version of this library use the following command
 ```
-  arduino-cli --config-file arduino-cli.yml lib upgrade 'Adafruit NeoPixel'
+arduino-cli --config-file arduino-cli.yml lib upgrade 'Adafruit NeoPixel'
 ```
 
 ## Connect badge ESP32 board via CLI
 
 The following command will dump a list of all available board cores installed
 ```
-  arduino-cli --config-file arduino-cli.yml board listall
+arduino-cli --config-file arduino-cli.yml board listall
 ```
 
 Make sure the ESP32 we are using on the badge is in that list
@@ -156,20 +160,20 @@ and check if the CLI can see it.
 
 The following command will list all the connected boards the CLI sees
 ```
-  arduino-cli --config-file arduino-cli.yml board list
+arduino-cli --config-file arduino-cli.yml board list
 ```
 
 This will show the detected COM port and board type (which may be Unknown)
 ```
-  Port Protocol Type              Board Name FQBN Core
-  COM4 serial   Serial Port (USB) Unknown
+  Port Protocol Type                Board Name FQBN Core
+  COM4 serial   Serial Port (USB)   Unknown
 ```
 
 Don't worry if the board FQBN shows up as Unknown since we can set that
 
 Take note of the COM port since we will need that to communicate with it later
 
-## Compile and Upload code via CLI
+## Compile code via CLI
 
 At this point we should be ready to compile and upload code to the badge ESP32 board.
 
@@ -177,7 +181,7 @@ In the following examples we will be referencing the sketch ```future_badge_prot
 
 The following command will compile the named sketch for use with our board fqbn
 ```
-  arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries future_badge_proto02
+arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries future_badge_proto02
 ```
 
 The arg ```--build-path _build``` is optional to have it put all build artifacts here instead of temp for ease of troubleshooting.
@@ -196,6 +200,17 @@ When the CLI compile is run it should show you compile stats and/or errors simil
   esp32:esp32   2.0.9   .\code\_data\packages\esp32\hardware\esp32\2.0.9
 ```
 
+### Script to Compile code via CLI
+
+To simplify the above we have created a bash script named ```cli-compile.sh``` that takes a single command line argument of the sketch name.
+
+To perform the compile via the script execute it in the code directory
+```
+bash ./cli-compile.sh future_badge_proto02
+```
+
+## Upload code via CLI
+
 Now we are ready to upload the binary we compiled to the badge ESP32 board.
 
 Note that the binary file needed is saved to ```<sketch_name>/build/<fqbn>/``` and will be named ```<sketch_name>.ino.bin```
@@ -203,7 +218,7 @@ The code we have written here may include binaries which can be used without com
 
 The following command will upload the named sketch binary to the badge
 ```
-  arduino-cli --config-file arduino-cli.yml upload -p COM4 --fqbn esp32:esp32:esp32 --input-file future_badge_proto02/build/esp32.esp32.esp32/future_badge_proto02.ino.bin
+arduino-cli --config-file arduino-cli.yml upload -p COM4 --fqbn esp32:esp32:esp32 --input-file future_badge_proto02/build/esp32.esp32.esp32/future_badge_proto02.ino.bin
 ```
 
 NOTE: Saving the compiled binary in a defined place and uploading from an input file allows for quickly changing between different code without the need to compile each again.
@@ -242,6 +257,11 @@ It should show you upload stats and/or errors
   Hard resetting via RTS pin...
 ```
 
+### Script to Upload code via CLI
 
+To simplify the above we have created a bash script named ```cli-upload.sh``` that takes two command line arguments of the sketch name and serial port.
 
-
+To perform the compile via the script execute it in the code directory
+```
+bash ./cli-upload.sh future_badge_proto02 COM4
+```
