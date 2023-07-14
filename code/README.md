@@ -265,3 +265,12 @@ To perform the compile via the script execute it in the code directory
 ```
 bash ./cli-upload.sh future_badge_proto02 COM4
 ```
+
+### Monitor Serial Output
+
+To monitor the serial output you can use the arduino-cli or your favorite serial app.
+
+The arduino-cli monitor command with port and baud config can be used like this:
+```
+arduino-cli monitor --port COM7 --config baudrate=115200
+```

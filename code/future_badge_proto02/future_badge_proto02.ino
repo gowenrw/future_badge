@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <WiFi.h>
-//#include <Arduino.h>
+#include <Arduino.h>
 
 // NeoPixel PIN VALUES
 #define NEO01Pin 18   // 18 corresponds to GPIO18
@@ -51,12 +51,69 @@ int TouchValue = 14;
 // Debug Serial - If set greater than 0 it send lots of things to serial for debugging
 int DebugSerial = 1;
 
+// WIFI status codes
+const char* wl_status_to_string(wl_status_t status) {
+  switch (status) {
+    case WL_NO_SHIELD: return "WL_NO_SHIELD";
+    case WL_IDLE_STATUS: return "WL_IDLE_STATUS";
+    case WL_NO_SSID_AVAIL: return "WL_NO_SSID_AVAIL";
+    case WL_SCAN_COMPLETED: return "WL_SCAN_COMPLETED";
+    case WL_CONNECTED: return "WL_CONNECTED";
+    case WL_CONNECT_FAILED: return "WL_CONNECT_FAILED";
+    case WL_CONNECTION_LOST: return "WL_CONNECTION_LOST";
+    case WL_DISCONNECTED: return "WL_DISCONNECTED";
+  }
+}
+
+// WiFi & BT Functions
+void disableWiFi(){
+    //adc_power_off();
+    WiFi.disconnect(true);  // Disconnect from the network
+    WiFi.mode(WIFI_OFF);    // Switch WiFi off
+    Serial.println("WiFi disabled!");
+}
+void disableBluetooth(){
+    btStop();
+    Serial.println("Bluetooth stopped!");
+}
+void setModemSleep() {
+    disableWiFi();
+    disableBluetooth();
+    setCpuFrequencyMhz(80);
+}
+void enableWiFi(){
+    //adc_power_on();
+    delay(200);
+    WiFi.disconnect(false);  // Reconnect the network
+    WiFi.mode(WIFI_STA);    // Switch WiFi on
+    delay(200);
+    Serial.println("WiFi Started!");
+    //WiFi.begin(STA_SSID, STA_PASS);
+    //while (WiFi.status() != WL_CONNECTED) {
+    //    delay(500);
+    //    Serial.print(".");
+    //}
+    //Serial.println("WiFi connected");
+    //Serial.println("IP address: ");
+    //Serial2\.println(WiFi.localIP());
+}
+void wakeModemSleep() {
+    setCpuFrequencyMhz(240);
+    enableWiFi();
+}
+
 // SETUP - RUN ONCE
 void setup(){
-  delay(200);  
-  // Turn Off WiFi/BLE/Radio Off
-  WiFi.mode(WIFI_OFF);
-  //esp_modem_sleep_start();
+  // Add a delay to allow opening serial monitor
+  delay(300);
+
+  // Turn Off WiFi/BT
+  setModemSleep();
+
+  // Playing with other sleep methods
+  //WiFi.mode(WIFI_OFF);
+  //esp_sleep_enable_timer_wakeup(9000000);
+  //esp_light_sleep_start();
 
   // configure LED PWM functionalitites per channel
   ledcSetup(LED31Apwm, freq, resolution);
@@ -107,6 +164,12 @@ void loop(){
   // Assembly conditions and battery vs usb
   TouchValue = touchRead(TouchPin);
   if ( (TouchValue / TouchThreshold) > 2 ) { TouchThreshold = int(TouchThreshold * 1.8); }
+
+  // Display WIFI status
+  if (DebugSerial > 0) {
+    Serial.print("WiFi Status: ");
+    Serial.println(wl_status_to_string(WiFi.status()));
+  }
 
   // Iterate 0 to 255
   for(int i=0; i<256; i++){
@@ -291,6 +354,7 @@ void loop(){
     TouchValue = touchRead(TouchPin);
     // Do Stuff If We Detect a Touch
     if (TouchValue < TouchThreshold) {
+      setModemSleep();
       // Print current Touch value/threshold to serial console for troubleshooting
       if (DebugSerial > 0) {
         Serial.print(" TOUCHED=");
