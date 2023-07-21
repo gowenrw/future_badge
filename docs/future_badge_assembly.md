@@ -18,13 +18,14 @@ This is the list of components that you should have available for the assembly
   * 1x 9V Battery
   * 1x Sticker (Not Required for badge Assembly)
   * 1x Assembly Instruction Sheet
-  * Large Component Bag (6x8in) Containing:
+  * Small Component Bag (3x4in) Containing:
     * 1x ESP32 WROOM Development board
+  * Large Component Bag (6x8in) Containing:
     * 1x Header Male Breakaway Strip with 1x40 Pins
     * 3x Header Female 1x4 Pins
     * 1x Header Female Keyed 2x3 Pins (Badge SAO connector)
     * 1x 9V Battery connector
-    * 1x Rubber Band #8 size
+    * 2x Rubber Band #8 size
     * Medium Component Bag (4x6in) Containing:
       * 1x THT SS12D00 3-Pin SPDT Switch
       * 4x THT 100nF Ceramic Disc Capacitors
@@ -35,6 +36,7 @@ This is the list of components that you should have available for the assembly
       * 2x THT One Color (White) 3mm 2-pin Round Top LEDs
       * 14x THT 47 Ohm 6.2mm Metal Film Resistors
     * Small Component Bag (3x4in) Containing:
+      * NOTE: If SMD components pre-assembled this bag will not be present
       * 1x SMT CJ3139k 20V 0.66A PNP SOT-23 MOSFET Transistor
       * 1x SMT LMTOE78_03-0.5 12x12mm Step Down Power Regulator
       * 2x SMT 22uF 25V X7R 1210 Multi-Layer Ceramic Capacitor

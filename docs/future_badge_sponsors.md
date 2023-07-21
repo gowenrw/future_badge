@@ -10,14 +10,21 @@ I want to thank all of our sponsors from the Indiegogo campaign that made this b
 
 Without these sponsors I would not have been able to afford to make this badge given that I was unemployed when we started work on it.
 
+We had a total of 93 people sponsor us by pledging to get 100 badges.
+
 Not every sponsor from the crowd funding campaign will be listed as this was opt-in choice.
 
 ## Sponsor List
 
 This is the list of the people who opted-in to being listed as a sponsor
 
-* COMING
-* SOON
+* Blancohak
+* Dclaw
+* Frosty Dirona
+* GDB
+* Virtsean
+* 
+
 
 ---
 

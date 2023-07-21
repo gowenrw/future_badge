@@ -270,7 +270,12 @@ bash ./cli-upload.sh future_badge_proto02 COM4
 
 To monitor the serial output you can use the arduino-cli or your favorite serial app.
 
-The arduino-cli monitor command with port and baud config can be used like this:
+The following command will list all the connected boards so you can get the serial port
 ```
-arduino-cli monitor --port COM7 --config baudrate=115200
+arduino-cli --config-file arduino-cli.yml board list
+```
+
+The arduino-cli monitor command with serial port (from above) and baud config can be used like this:
+```
+arduino-cli monitor --port COM4 --config baudrate=115200
 ```
