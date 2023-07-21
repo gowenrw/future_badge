@@ -12,18 +12,27 @@ Without these sponsors I would not have been able to afford to make this badge g
 
 We had a total of 93 people sponsor us by pledging to get 100 badges.
 
-Not every sponsor from the crowd funding campaign will be listed as this was opt-in choice.
+Not every sponsor from the crowd funding campaign will be listed as this was an opt-in choice.
 
 ## Sponsor List
 
 This is the list of the people who opted-in to being listed as a sponsor
 
-* Blancohak
+* Acetolyne
+* BigTaro
+* Blancohak  
+* CactusJack
 * Dclaw
+* Dvir0s
+* Eric aka TechMedic76
 * Frosty Dirona
 * GDB
+* NinjaLikesCheez
+* ReanimationXP
+* ReloadRtr
+* Rj_chap (@rj_chap)
+* TruBluFan
 * Virtsean
-* 
 
 
 ---
