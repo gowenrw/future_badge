@@ -18,22 +18,27 @@ Not every sponsor from the crowd funding campaign will be listed as this was an 
 
 This is the list of the people who opted-in to being listed as a sponsor
 
-* Acetolyne
-* BigTaro
-* Blancohak  
-* CactusJack
-* Dclaw
-* Dvir0s
-* Eric aka TechMedic76
-* Frosty Dirona
-* GDB
-* NinjaLikesCheez
-* ReanimationXP
-* ReloadRtr
-* Rj_chap (@rj_chap)
-* TruBluFan
-* Virtsean
+* ```Acetolyne```
+* ```BigTaro```
+* ```blancohak```
+* ```CactusJack```
+* ```dclaw```
+* ```Dvir0s```
+* ```Eric aka TechMedic76```
+* ```Frosty Dirona```
+* ```gdb```
+* ```mnteye```
+* ```NinjaLikesCheez```
+* ```ReanimationXP```
+* ```ReloadRtr```
+* ```@rj_chap```
+* ```__t0rn__```
+* ```TruBluFan```
+* ```virtsean```
 
+## Home
+
+[Return to Home Page](/)
 
 ---
 
