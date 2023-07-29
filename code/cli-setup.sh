@@ -21,17 +21,25 @@ echo "arduino-cli --config-file arduino-cli.yml core upgrade" |tee -a arduino_cl
 arduino-cli --config-file arduino-cli.yml core upgrade >>arduino_cli_setup.log 2>&1
 echo "##########" >>arduino_cli_setup.log
 
-echo "Install / Upgrade Adafruit NeoPixel Library" |tee -a arduino_cli_setup.log
-echo "##########" >>arduino_cli_setup.log
+# ########## loadLibs ##########
 
-echo "arduino-cli --config-file arduino-cli.yml lib search 'Adafruit NeoPixel'" |tee -a arduino_cli_setup.log
-arduino-cli --config-file arduino-cli.yml lib search 'Adafruit NeoPixel' >>arduino_cli_setup.log 2>&1
-echo "##########" >>arduino_cli_setup.log
+loadLibs=("Adafruit NeoPixel" "AsyncTCP" "ESPAsyncWebSrv" "DNSServer")
 
-echo "arduino-cli --config-file arduino-cli.yml lib install 'Adafruit NeoPixel'" |tee -a arduino_cli_setup.log
-arduino-cli --config-file arduino-cli.yml lib install 'Adafruit NeoPixel' >>arduino_cli_setup.log 2>&1
-echo "##########" >>arduino_cli_setup.log
+for l in "${loadLibs[@]}"; do
+  echo "Install / Upgrade $l Library" |tee -a arduino_cli_setup.log
+  echo "##########" >>arduino_cli_setup.log
 
-echo "arduino-cli --config-file arduino-cli.yml lib upgrade 'Adafruit NeoPixel'" |tee -a arduino_cli_setup.log
-arduino-cli --config-file arduino-cli.yml lib upgrade 'Adafruit NeoPixel' >>arduino_cli_setup.log 2>&1
-echo "##########" >>arduino_cli_setup.log
+  echo "arduino-cli --config-file arduino-cli.yml lib search '$l'" |tee -a arduino_cli_setup.log
+  arduino-cli --config-file arduino-cli.yml lib search "$l" >>arduino_cli_setup.log 2>&1
+  echo "##########" >>arduino_cli_setup.log
+
+  echo "arduino-cli --config-file arduino-cli.yml lib install '$l'" |tee -a arduino_cli_setup.log
+  arduino-cli --config-file arduino-cli.yml lib install "$l" >>arduino_cli_setup.log 2>&1
+  echo "##########" >>arduino_cli_setup.log
+
+  echo "arduino-cli --config-file arduino-cli.yml lib upgrade '$l'" |tee -a arduino_cli_setup.log
+  arduino-cli --config-file arduino-cli.yml lib upgrade "$l" >>arduino_cli_setup.log 2>&1
+  echo "##########" >>arduino_cli_setup.log
+done
+
+

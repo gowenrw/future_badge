@@ -150,3 +150,5 @@ code/libraries/*
 code/arduino_cli_setup.log
 # Since binaries are ignored above we need to allow the few we want
 !code/*/build/*/*.bin
+!code/libraries/future_badge_ctf
+!code/libraries/future_badge_ctf/**
