@@ -3,6 +3,11 @@
 #include <Arduino.h>
 #include <future_badge_ctf.h>
 
+// NOTE: This revision does not actually have running CTF code
+// The library here was just a test of using a library for ctf
+// This library future_badge_ctf.h is just a test
+// Next rev will reference the real CTF code library
+
 // NeoPixel PIN VALUES
 #define NEO01Pin 18   // 18 corresponds to GPIO18
 #define NEO02Pin 19   // 18 corresponds to GPIO19

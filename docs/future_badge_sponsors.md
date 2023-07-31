@@ -27,11 +27,13 @@ This is the list of the people who opted-in to being listed as a sponsor
 * ```Eric aka TechMedic76```
 * ```Frosty Dirona```
 * ```gdb```
+* ```K4rm4```
 * ```mnteye```
 * ```NinjaLikesCheez```
 * ```ReanimationXP```
 * ```ReloadRtr```
 * ```@rj_chap```
+* ```@spike@infosec.exchange```
 * ```__t0rn__```
 * ```TruBluFan```
 * ```virtsean```
