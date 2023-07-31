@@ -33,6 +33,10 @@ These are the Arduino IDE and CLI versions we have tested the code with:
   * [Linux 64bit Tarball Link](https://github.com/arduino/arduino-cli/releases/download/0.32.3/arduino-cli_0.32.3_Linux_64bit.tar.gz)
   * [Installation Instructions](https://arduino.github.io/arduino-cli/0.32/installation/)
 
+# Quickstart
+
+If you want to jump right in and start compiling and uploading code using the Arduino CLI and the scripts provided then checkout the [QUICKSTART page](QUICKSTART.md).
+
 # Arduino IDE setup and use
 
 Some additional setup is required to use the Arduino IDE with the ESP32 on the badge:
@@ -48,6 +52,8 @@ Some additional setup is required to use the Arduino IDE with the ESP32 on the b
 * Connect the ESP32 via USB cable and select the COM port if it is not autodetected
   * In most cases it should autodetect the port
   * Sometimes on first connect you need to help it by going to Tools->Port and choosing the port
+* This code exceeds the normal partition size so make sure you select the Minimal SPIFFS Partition type
+  * This setting can be found under Tools -> Partition Scheme
 * This code uses the AdaFruit NeoPixel library which needs to be installed
   * The library can be installed via the Arduino IDE library manager or manually
   * Installation instructions can be found at [the adafruit neopixel github page](https://github.com/adafruit/Adafruit_NeoPixel)
@@ -141,6 +147,18 @@ To upgrade a previously installed version of this library use the following comm
 arduino-cli --config-file arduino-cli.yml lib upgrade 'Adafruit NeoPixel'
 ```
 
+### Installing Other Libraries
+
+In addition to the Neopixel Library above the CTF portion of our code requires a few more libraries.
+
+These should be installed using the same steps as above.
+
+This is the list of additional libraries needed
+
+* "AsyncTCP"
+* "ESPAsyncWebSrv"
+* "DNSServer"
+
 ## Connect badge ESP32 board via CLI
 
 The following command will dump a list of all available board cores installed
@@ -177,27 +195,35 @@ Take note of the COM port since we will need that to communicate with it later
 
 At this point we should be ready to compile and upload code to the badge ESP32 board.
 
-In the following examples we will be referencing the sketch ```future_badge_rev01``` code so you will need to change this for whichever sketch you wish to use.
+In the following examples we will be referencing the sketch ```future_badge_rev02``` code so you will need to change this for whichever sketch you wish to use.
 
 The following command will compile the named sketch for use with our board fqbn
 ```
-arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries future_badge_rev01
+arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries future_badge_rev02 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080
 ```
 
 The arg ```--build-path _build``` is optional to have it put all build artifacts here instead of temp for ease of troubleshooting.
 
 The arg ```--export-binaries``` will save the final binary files into ```<sketch_name>/build/<fqbn>/``` for use by upload.
 
+The build property args ```--build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080``` make sure that the partition size and upload size are set properly.
+Our code is THIC and wont fit in the default partition size.
+
 When the CLI compile is run it should show you compile stats and/or errors similar to this
 ```
-  Sketch uses 726905 bytes (55%) of program storage space. Maximum is 1310720 bytes.
-  Global variables use 43568 bytes (13%) of dynamic memory, leaving 284112 bytes for local variables.
+  Sketch uses 1827197 bytes (92%) of program storage space. Maximum is 1966080 bytes.
+  Global variables use 48884 bytes (14%) of dynamic memory, leaving 278796 bytes for local variables.
   Maximum is 327680 bytes.
-  Used library      Version Path
-  Adafruit NeoPixel 1.11.0  .\code\libraries\Adafruit_NeoPixel
-  WiFi              2.0.0   .\code\_data\packages\esp32\hardware\esp32\2.0.9\libraries\WiFi
+  Used library        Version Path
+  Adafruit NeoPixel   1.11.0  .\code\libraries\Adafruit_NeoPixel
+  WiFi                2.0.0   .\code\_data\packages\esp32\hardware\esp32\2.0.11\libraries\WiFi
+  future_badge_ctf_r2 1.2.0   .\code\libraries\future_badge_ctf_r2
+  AsyncTCP            1.1.4   .\code\libraries\AsyncTCP
+  DNSServer           2.0.0   .\code\_data\packages\esp32\hardware\esp32\2.0.11\libraries\DNSServer
+  ESPAsyncWebSrv      1.2.6   .\code\libraries\ESPAsyncWebSrv
+  FS                  2.0.0   .\code\_data\packages\esp32\hardware\esp32\2.0.11\libraries\FS
   Used platform Version Path
-  esp32:esp32   2.0.9   .\code\_data\packages\esp32\hardware\esp32\2.0.9
+  esp32:esp32   2.0.11  .\code\_data\packages\esp32\hardware\esp32\2.0.11
 ```
 
 ### Script to Compile code via CLI
@@ -206,7 +232,7 @@ To simplify the above we have created a bash script named ```cli-compile.sh``` t
 
 To perform the compile via the script execute it in the code directory
 ```
-bash ./cli-compile.sh future_badge_rev01
+bash ./cli-compile.sh future_badge_rev02
 ```
 
 ## Upload code via CLI
@@ -218,7 +244,7 @@ The code we have written here may include binaries which can be used without com
 
 The following command will upload the named sketch binary to the badge
 ```
-arduino-cli --config-file arduino-cli.yml upload -p COM4 --fqbn esp32:esp32:esp32 --input-file future_badge_rev01/build/esp32.esp32.esp32/future_badge_rev01.ino.bin
+arduino-cli --config-file arduino-cli.yml upload -p COM4 --fqbn esp32:esp32:esp32 --input-file future_badge_rev02/build/esp32.esp32.esp32/future_badge_rev02.ino.bin
 ```
 
 NOTE: Saving the compiled binary in a defined place and uploading from an input file allows for quickly changing between different code without the need to compile each again.
@@ -263,10 +289,10 @@ To simplify the above we have created a bash script named ```cli-upload.sh``` th
 
 To perform the compile via the script execute it in the code directory
 ```
-bash ./cli-upload.sh future_badge_rev01 COM4
+bash ./cli-upload.sh future_badge_rev02 COM4
 ```
 
-### Monitor Serial Output
+## Monitor Serial Output
 
 To monitor the serial output you can use the arduino-cli or your favorite serial app.
 

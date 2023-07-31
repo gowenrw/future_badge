@@ -30,5 +30,5 @@ if ! [ -d "$1" ]
     exit;
 fi
 
-echo "arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries $1"
-arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries $1
+echo "arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries $1 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080"
+arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries $1 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080

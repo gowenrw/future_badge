@@ -68,3 +68,11 @@ Thanks to true from the Whiskey Pirate Crew I was able to get a voltage regulato
 Still not ideal and I'll be providing two 9V batteries in each kit and have lots of spares at defcon to compensate.
 But it looks cool right?
 
+# Code
+
+The code is detailed in the github repo which can be found here: [Code Documentation](https://github.com/gowenrw/future_badge/blob/main/code/README.md)
+
+The CTF challenge is a compiled library so you won't gain any hints there.
+That source code will be released after defcon.
+
+The rest of the code is open to see and modify as you will.
