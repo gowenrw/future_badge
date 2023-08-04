@@ -32,5 +32,5 @@ git submodule add https://github.com/gowenrw/reference_parts reference_parts
 This will make a link to the current commit of that repo.
 To update it to a newer commit after its been added use this cmd:
 ```
-git submodule update --recursive
+git submodule update --init --recursive
 ```
