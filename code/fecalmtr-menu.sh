@@ -40,6 +40,10 @@ CTxtERROR(){
 ########################################
 GetBoardSerial(){
   BoardSerial=$(arduino-cli --config-file arduino-cli.yml board list | grep serial | head -n 1 | awk '{print $1}')
+  if [ ! $BoardSerial ]
+  then
+    BoardSerial="not-set"
+  fi
 }
 GetCodeSketch(){
   ls -d future*/
@@ -50,9 +54,19 @@ MinicomSerialMonitor(){
 }
 CompileCode(){
   if ! [ -d "$CodeSketch" ]
+  then
+    echo "$(CTxtERROR 'CODE SKETCH') $(CTxtYellow $CodeSketch) $(CTxtERROR 'NOT FOUND')"
+    return;
+  elif [ -f "$CodeSketch/build/esp32.esp32.esp32/$CodeSketch.ino.bin" ]
+  then
+    echo "$(CTxtERROR 'BINARY FOUND FOR CODE SKETCH') $(CTxtYellow $CodeSketch)"
+    read -p "$(CTxtERROR 'THIS WILL OVERWRITE EXISTING BINARY, TYPE Y TO PROCEED >>') " CompileOverwrite
+    if [ $CompileOverwrite == "Y" ] || [ $CompileOverwrite == "y" ]
     then
-      echo "$(CTxtERROR 'CODE SKETCH') $(CTxtYellow $CodeSketch) $(CTxtERROR 'NOT FOUND')"
+      echo "$(CTxtGreen 'PROCEEDING...')"
+    else
       return;
+    fi
   fi
   echo "$(CTxtYellow 'arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries') $(CTxtRed $CodeSketch) $(CTxtYellow '--build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080') "
   arduino-cli --config-file arduino-cli.yml compile --fqbn esp32:esp32:esp32 --build-path _build --export-binaries $CodeSketch --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080
