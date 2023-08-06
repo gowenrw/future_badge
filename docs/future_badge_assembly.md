@@ -8,6 +8,8 @@ layout: default
 
 Here are the assembly instructions I put together for the future badge.
 
+There is also a [Future Badge Soldering Walk-Through Video](https://youtu.be/ozqXjqQztUM) that you may find helpful.
+
 ## Badge Distribution Packages
 
 The badges have been distributed in three different packages

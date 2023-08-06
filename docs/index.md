@@ -33,7 +33,7 @@ I want to thank all of our sponsors from the Indiegogo campaign that made this b
 Assembly Instructions for the Future Badge kit can be found here: [Badge Assembly](future_badge_assembly.md)
 
 An assembly walkthrough video can be found here:
-COMING SOON
+[Future Badge Soldering Walk-Through Video](https://youtu.be/ozqXjqQztUM)
 
 # Details
 
