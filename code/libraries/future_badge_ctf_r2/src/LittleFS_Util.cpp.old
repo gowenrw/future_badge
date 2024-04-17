@@ -1,0 +1,221 @@
+#include "LittleFS_Util.h"
+
+//#define DEBUGLEVEL DEBUGLEVEL_ERRORS //For production
+//#define DEBUGLEVEL DEBUGLEVEL_DEBUGGING 
+#define DEBUGLEVEL DEBUGLEVEL_VERBOSE
+#include "debug.h"
+
+
+void LittleFS_Util::init() {
+
+}
+
+void LittleFS_Util::listDir(fs::FS &fs, const char * dirname, uint8_t levels){
+    debugD("Listing directory: ");debuglnD(dirname);
+
+    File root = fs.open(dirname);
+    if(!root){
+        debuglnD("- failed to open directory");
+        return;
+    }
+    if(!root.isDirectory()){
+        debuglnD(" - not a directory");
+        return;
+    }
+
+    File file = root.openNextFile();
+    while(file){
+        if(file.isDirectory()){
+            debugD("  DIR : ");
+            debuglnD(file.name());
+            if(levels){
+                listDir(fs, file.path(), levels -1);
+            }
+        } else {
+            debugD("  FILE: ");
+            debugD(file.name());
+            debugD("\tSIZE: ");
+            debuglnD(file.size());
+        }
+        file = root.openNextFile();
+    }
+}
+
+void LittleFS_Util::createDir(fs::FS &fs, const char * path){
+    debugD("Creating Dir: ");debuglnD(path);
+    if(fs.mkdir(path)){
+        debuglnD("Dir created");
+    } else {
+        debuglnD("mkdir failed");
+    }
+}
+
+void LittleFS_Util::removeDir(fs::FS &fs, const char * path){
+    debugD("Removing Dir: ");debuglnD(path);
+    if(fs.rmdir(path)){
+        debuglnD("Dir removed");
+    } else {
+        debuglnD("rmdir failed");
+    }
+}
+
+void LittleFS_Util::readFile(fs::FS &fs, const char * path){
+    debugD("Reading file: ");debuglnD(path);
+
+    File file = fs.open(path);
+    if(!file || file.isDirectory()){
+        debuglnD("- failed to open file for reading");
+        return;
+    }
+
+    debuglnD("- read from file:");
+    while(file.available()){
+        Serial.write(file.read());
+    }
+    file.close();
+}
+
+void LittleFS_Util::writeFile(fs::FS &fs, const char * path, const char * message){
+    debugD("Writing file: ");debuglnD(path);
+
+    File file = fs.open(path, FILE_WRITE);
+    if(!file){
+        debuglnD("- failed to open file for writing");
+        return;
+    }
+    if(file.print(message)){
+        debuglnD("- file written");
+    } else {
+        debuglnD("- write failed");
+    }
+    file.close();
+}
+
+void LittleFS_Util::appendFile(fs::FS &fs, const char * path, const char * message){
+    debugD("Appending to file: ");debuglnD(path);
+
+    File file = fs.open(path, FILE_APPEND);
+    if(!file){
+        debuglnD("- failed to open file for appending");
+        return;
+    }
+    if(file.print(message)){
+        debuglnD("- message appended");
+    } else {
+        debuglnD("- append failed");
+    }
+    file.close();
+}
+
+void LittleFS_Util::renameFile(fs::FS &fs, const char * path1, const char * path2){
+    debugD("Renaming file ");debugD(path1);debugD(" to ");debuglnD(path2);
+    if (fs.rename(path1, path2)) {
+        debuglnD("- file renamed");
+    } else {
+        debuglnD("- rename failed");
+    }
+}
+
+void LittleFS_Util::deleteFile(fs::FS &fs, const char * path){
+    debugD("Deleting file: ");debuglnD(path);
+    if(fs.remove(path)){
+        debuglnD("- file deleted");
+    } else {
+        debuglnD("- delete failed");
+    }
+}
+
+// SPIFFS-like write and delete file, better use #define CONFIG_LITTLEFS_SPIFFS_COMPAT 1
+
+void LittleFS_Util::writeFile2(fs::FS &fs, const char * path, const char * message){
+    if(!fs.exists(path)){
+      if (strchr(path, '/')) {
+              debugD("Create missing folders of: ");debuglnD(path);
+        char *pathStr = strdup(path);
+        if (pathStr) {
+          char *ptr = strchr(pathStr, '/');
+          while (ptr) {
+            *ptr = 0;
+            fs.mkdir(pathStr);
+            *ptr = '/';
+            ptr = strchr(ptr+1, '/');
+          }
+        }
+        free(pathStr);
+      }
+    }
+
+    debugD("Writing file to: ");debuglnD(path);
+    File file = fs.open(path, FILE_WRITE);
+    if(!file){
+        debuglnD("- failed to open file for writing");
+        return;
+    }
+    if(file.print(message)){
+        debuglnD("- file written");
+    } else {
+        debuglnD("- write failed");
+    }
+    file.close();
+}
+
+void LittleFS_Util::deleteFile2(fs::FS &fs, const char * path){
+    debugD("Deleting file and empty folders on path: ");debuglnD(path);
+
+    if(fs.remove(path)){
+        debuglnD("- file deleted");
+    } else {
+        debuglnD("- delete failed");
+    }
+
+    char *pathStr = strdup(path);
+    if (pathStr) {
+        char *ptr = strrchr(pathStr, '/');
+        if (ptr) {
+            debugD("Removing all empty folders on path: ");debuglnD(path);
+        }
+        while (ptr) {
+            *ptr = 0;
+            fs.rmdir(pathStr);
+            ptr = strrchr(pathStr, '/');
+        }
+        free(pathStr);
+    }
+}
+
+// list all of the files, if ishtml=true, return html rather than simple text
+// source: https://github.com/smford/esp32-asyncwebserver-fileupload-example/tree/master
+String LittleFS_Util::listFiles(bool ishtml) {
+  String returnText = "";
+  //debuglnD("Listing files stored on SPIFFS");
+  File root = LittleFS.open("/");
+  File foundfile = root.openNextFile();
+  if (ishtml) {
+    returnText += "<table><tr><th align='left'>Name</th><th align='left'>Size</th><th></th><th></th></tr>";
+  }
+  while (foundfile) {
+    if (ishtml) {
+      returnText += "<tr align='left'><td>" + String(foundfile.name()) + "</td><td>" + humanReadableSize(foundfile.size()) + "</td>";
+      returnText += "<td><button onclick=\"downloadDeleteButton(\'" + String(foundfile.name()) + "\', \'download\')\">Download</button>";
+      returnText += "<td><button onclick=\"downloadDeleteButton(\'" + String(foundfile.name()) + "\', \'delete\')\">Delete</button></tr>";
+    } else {
+      returnText += "File: " + String(foundfile.name()) + " Size: " + humanReadableSize(foundfile.size()) + "\n";
+    }
+    foundfile = root.openNextFile();
+  }
+  if (ishtml) {
+    returnText += "</table>";
+  }
+  root.close();
+  foundfile.close();
+  return returnText;
+}
+
+// Make size of files human readable
+// source: https://github.com/CelliesProjects/minimalUploadAuthESP32
+String LittleFS_Util::humanReadableSize(const size_t bytes) {
+  if (bytes < 1024) return String(bytes) + " B";
+  else if (bytes < (1024 * 1024)) return String(bytes / 1024.0) + " KB";
+  else if (bytes < (1024 * 1024 * 1024)) return String(bytes / 1024.0 / 1024.0) + " MB";
+  else return String(bytes / 1024.0 / 1024.0 / 1024.0) + " GB";
+}
